@@ -3,401 +3,203 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PASINDU Cashier Attendance</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:12px;color:white;font-family:Arial;background:linear-gradient(135deg,#09051d,#25104b,#062b32,#180b32);background-size:300% 300%;animation:bg 12s infinite;min-height:100vh}
-@keyframes bg{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
-.app{max-width:560px;margin:auto}
-.card{padding:16px;margin-bottom:13px;border-radius:20px;background:linear-gradient(145deg,#ffffff19,#ffffff08);border:1px solid #ffffff30;box-shadow:0 10px 30px #0005;backdrop-filter:blur(12px)}
-.hero{text-align:center;padding:23px 10px;background:linear-gradient(120deg,#8b21c9,#4232b4,#087f83,#12834b);background-size:250% 250%;animation:bg 8s infinite}
-.brand{font-size:23px;font-weight:900;letter-spacing:1px}.brand span{color:#b6ff77}
-.clock{font-size:37px;font-weight:900;margin-top:16px;text-shadow:0 0 18px #fff8}
-.liveDate{margin-top:7px;font-size:14px}
-.user{display:inline-block;margin-top:14px;padding:9px 18px;border-radius:30px;background:#ffffff27;border:1px solid #ffffff55;font-weight:bold}
-.heading{font-size:17px;font-weight:900;color:#e6b8ff;margin-bottom:13px}
-label{display:block;color:#d8c8f3;font-size:13px;margin:12px 0 7px}
-input{width:100%;padding:13px;border-radius:12px;background:#110d27;color:white;border:1px solid #9b69d1;font-size:16px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tab{border:0;border-radius:14px;padding:15px 5px;background:#30234d;color:white;font-weight:900;font-size:15px}
-.tab.active{background:linear-gradient(120deg,#a855f7,#ec4899);box-shadow:0 0 18px #d946ef77}
-.shiftGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.shift{border-radius:15px;background:#272040;color:white;border:1px solid #79608e;padding:12px 3px;min-height:86px;font-weight:bold}
-.shift .emoji{display:block;font-size:24px;margin-bottom:6px}
-.shift small{display:block;font-size:11px;margin-top:6px;color:#ddd}
-.shift.active{background:linear-gradient(145deg,#087b52,#19a65a);border:2px solid #9dffbf}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
-.action{border:0;border-radius:13px;padding:14px 5px;color:white;font-weight:900}
-.save{background:linear-gradient(110deg,#7c3aed,#ec4899,#db2777)}
-.off{background:linear-gradient(110deg,#596276,#343d52)}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sum{border-radius:16px;padding:15px 8px;text-align:center}
-.purple{background:linear-gradient(135deg,#8529cf,#4b1c8d)}
-.green{background:linear-gradient(135deg,#0a9a69,#075344)}
-.sum small{font-size:11px;font-weight:bold}
-.sum strong{display:block;font-size:19px;margin-top:9px;color:#c2ffce}
-.day{display:flex;gap:10px;align-items:stretch;background:#1d1832;border:1px solid #ffffff20;padding:11px;border-radius:14px;margin-bottom:9px;min-height:78px}
-.day.poya{background:linear-gradient(110deg,#35204d,#211638);border:1px solid #f5d77b;box-shadow:0 0 13px #eabf4a44}
-.daydate{width:72px;min-width:72px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:17px;border-right:1px solid #ffffff25;padding-right:8px}
-.dayinfo{flex:1;min-width:0}
-.daytop{display:flex;justify-content:space-between;align-items:center;gap:5px}
-.dayname{font-weight:900;font-size:13px}
-.salary{font-weight:900;color:#7effb1;text-align:right;font-size:13px}
-.detail{font-size:12px;color:#c7b9dc;margin-top:7px;line-height:1.5}
-.status{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;margin-top:6px;font-weight:bold}
-.worked{background:#087b4d;color:#b5ffcf}.rest{background:#596078;color:white}
-.poyaLetters{display:flex;flex-direction:column;align-items:center;gap:1px;color:#ffe18a;font-size:12px;font-weight:900;line-height:1.05;text-shadow:0 0 8px #ffc83d;animation:glow 1.8s infinite alternate}
-@keyframes glow{from{opacity:.72}to{opacity:1;text-shadow:0 0 13px #ffd45e}}
-.poyaLabel{font-size:9px;color:#ffe18a;margin-top:4px;letter-spacing:1px}
-.editBtn{border:0;border-radius:8px;padding:7px 10px;background:#6037a0;color:white;margin-top:7px;font-size:11px}
-.total{background:linear-gradient(110deg,#6922a5,#086b55);border-radius:15px;padding:16px;text-align:center;margin-top:12px}
-.total small{color:#eee}.total strong{display:block;font-size:24px;color:#b9ffcb;margin-top:7px}
-.message{text-align:center;font-size:13px;margin-top:10px;min-height:18px;overflow-wrap:anywhere}
-.footer{text-align:center;color:#b9a8d2;font-size:11px;padding:14px}
-.login{display:none;position:fixed;inset:0;background:#0a061a;z-index:10;align-items:center;justify-content:center;padding:20px}
-.loginbox{width:100%;max-width:400px;padding:25px;border-radius:24px;background:linear-gradient(140deg,#7b24b5,#252064,#076b53);border:1px solid #ffffff55}
-.loginbox h2,.loginbox p{text-align:center}
-.primary{width:100%;border:0;border-radius:13px;padding:15px;background:linear-gradient(100deg,#ec4899,#7c3aed,#0891b2);color:white;font-weight:900;margin-top:15px}
-@media(max-width:360px){.clock{font-size:30px}.card{padding:12px}.daydate{width:62px;min-width:62px}.salary{font-size:11px}}
+body{
+ margin:0;font-family:Arial,sans-serif;color:white;
+ background:linear-gradient(135deg,#16002e,#102b65,#071b35);
+ min-height:100vh;padding:14px
+}
+header{
+ text-align:center;padding:18px 10px;
+ background:linear-gradient(120deg,#ff0080,#7928ca,#00c6ff);
+ border-radius:20px;box-shadow:0 5px 25px #0006
+}
+h1{margin:0;font-size:23px}
+.clock{font-size:20px;font-weight:bold;margin-top:9px}
+.card{
+ background:#ffffff13;border:1px solid #ffffff35;
+ border-radius:18px;padding:15px;margin-top:15px;
+ box-shadow:0 5px 18px #0003
+}
+input,select{
+ padding:12px;border:0;border-radius:10px;
+ width:100%;font-size:16px;margin:6px 0;
+ background:#fff;color:#222
+}
+button{
+ border:0;border-radius:10px;padding:11px 14px;
+ font-weight:bold;cursor:pointer;margin:3px
+}
+.primary{background:#00e5ff;color:#001b35}
+.daybtn{background:#27e66b;color:#003c18}
+.evebtn{background:#ff9c27;color:#381800}
+.nightbtn{background:#8b5cf6;color:white}
+.clearbtn{background:#ff4567;color:white}
+.tabs{display:flex;gap:8px}
+.tabs button{flex:1;background:#ffffff25;color:white}
+.tabs button.active{background:#00d9ff;color:#001b35}
+.dateRow{
+ background:#ffffff16;border:1px solid #ffffff2b;
+ border-radius:14px;padding:12px;margin:10px 0
+}
+.dateTop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dateName{font-size:18px;font-weight:bold}
+.salary{color:#75ffbd;font-weight:bold;white-space:nowrap}
+.shiftButtons{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.shiftButtons button{flex:1;min-width:85px}
+.shiftButtons button.selected{outline:3px solid white;filter:brightness(1.2)}
+.off{font-size:12px;color:#bbb;margin-top:8px}
+.total{
+ text-align:center;font-size:22px;font-weight:bold;
+ color:#ffe66d;padding:12px
+}
+.poya{
+ display:flex;align-items:center;gap:12px;
+ color:#ffd76a;font-weight:bold
+}
+.poyaLetters{
+ font-size:14px;line-height:14px;text-align:center;
+ color:#ffe58a;text-shadow:0 0 9px #ffae00;
+ animation:glow 1.5s infinite alternate
+}
+@keyframes glow{from{opacity:.65}to{opacity:1;text-shadow:0 0 18px gold}}
+.small{font-size:12px;color:#ddd}
 </style>
 </head>
 <body>
-<div class="app">
- <div class="card hero">
-  <div class="brand">✦ PASINDU <span>CASHIER</span></div>
-  <div style="font-size:11px;letter-spacing:3px;margin-top:6px">SHIFT MANAGEMENT</div>
-  <div class="clock" id="clock">00:00:00</div>
-  <div class="liveDate" id="liveDate">Loading...</div>
-  <div class="user" id="userDisplay">👤 Cashier</div>
- </div>
 
- <div class="card">
-  <div class="heading">🌈 MONTH & YEAR</div>
-  <input type="month" id="month">
- </div>
+<header>
+<h1>🏇 PASINDU CASHIER SYSTEM</h1>
+<div class="clock" id="clock"></div>
+<div id="today"></div>
+</header>
 
- <div class="card">
-  <div class="heading">💎 SELECT PERIOD</div>
-  <div class="tabs">
-   <button class="tab active" id="tab1">💜 1 – 15</button>
-   <button class="tab" id="tab2">💚 16 – END</button>
-  </div>
- </div>
-
- <div class="card">
-  <div class="heading">⚡ MARK YOUR SHIFTS</div>
-  <label>Working Date</label>
-  <input type="date" id="workDate">
-  <label>Select Multiple Shifts</label>
-  <div class="shiftGrid">
-   <button class="shift" data-shift="Day"><span class="emoji">☀️</span>DAY<small>Rs. 1,550</small></button>
-   <button class="shift" data-shift="Evening"><span class="emoji">🌇</span>EVENING<small>Rs. 1,650</small></button>
-   <button class="shift" data-shift="Night"><span class="emoji">🌙</span>NIGHT<small>Rs. 2,250</small></button>
-  </div>
-  <div class="actions">
-   <button class="action save" id="saveBtn">💾 SAVE SHIFT</button>
-   <button class="action off" id="offBtn">⚪ MARK OFF</button>
-  </div>
-  <div class="message" id="message"></div>
- </div>
-
- <div class="card">
-  <div class="heading">💰 SALARY TOTALS</div>
-  <div class="summary">
-   <div class="sum purple"><small>💜 1 – 15 TOTAL</small><strong id="total1">Rs. 0</strong></div>
-   <div class="sum green"><small>💚 16 – END TOTAL</small><strong id="total2">Rs. 0</strong></div>
-  </div>
- </div>
-
- <div class="card">
-  <div class="heading" id="listTitle">📅 DAYS 1 – 15</div>
-  <div id="daysList"></div>
-  <div class="total"><small>SELECTED PERIOD TOTAL</small><strong id="periodTotal">Rs. 0</strong></div>
- </div>
- <div class="footer">✦ PASINDU CASHIER ATTENDANCE ✦</div>
+<div class="card">
+<label>Cashier Name</label>
+<input id="cashier" placeholder="Enter your name">
+<button class="primary" onclick="saveName()">SAVE NAME</button>
+<div class="small">Your name is saved on this phone.</div>
 </div>
 
-<div class="login" id="login">
- <div class="loginbox">
-  <h2>🌈 WELCOME</h2><p>Enter your name to continue</p>
-  <label>Your Name</label>
-  <input id="nameInput" maxlength="60" placeholder="Enter your name">
-  <button class="primary" id="loginBtn">CONTINUE ➜</button>
- </div>
+<div class="card">
+<label>Select Month</label>
+<input type="month" id="month">
+<div class="tabs">
+<button id="tab1" class="active" onclick="changeTab(1)">1 – 15</button>
+<button id="tab2" onclick="changeTab(2)">16 – END</button>
+</div>
 </div>
 
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,doc,getDocs,setDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<div class="card">
+<div id="days"></div>
+<div class="total" id="total">TOTAL: Rs. 0</div>
+</div>
 
-/* REPLACE WITH YOUR FIREBASE WEB APP CONFIG */
-const firebaseConfig={
- apiKey:"YOUR_API_KEY",
- authDomain:"YOUR_PROJECT_ID.firebaseapp.com",
- projectId:"YOUR_PROJECT_ID",
- storageBucket:"YOUR_PROJECT_ID.appspot.com",
- messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
- appId:"YOUR_APP_ID"
-};
+<div class="card">
+<button class="clearbtn" onclick="clearMonth()">CLEAR THIS MONTH</button>
+<div class="small">Attendance is saved only on this device.</div>
+</div>
 
-/* Official Sri Lankan Poya dates for 2026 */
-const POYA_DATES=new Set([
- "2026-01-03","2026-02-01","2026-03-02","2026-04-01",
- "2026-05-01","2026-05-30","2026-06-29","2026-07-29",
- "2026-08-27","2026-09-26","2026-10-25","2026-11-24",
- "2026-12-23"
-]);
+<script>
+const rates={Day:1550,Evening:1650,Night:2250};
+const poya2026=[
+"2026-01-03","2026-02-01","2026-03-02",
+"2026-04-01","2026-05-01","2026-05-30",
+"2026-06-29","2026-07-29","2026-08-27",
+"2026-09-26","2026-10-25","2026-11-24",
+"2026-12-23"
+];
+let tab=1;
+let month=document.getElementById("month");
+let cashier=document.getElementById("cashier");
+let data=JSON.parse(localStorage.getItem("cashierData")||"{}");
+cashier.value=localStorage.getItem("cashierName")||"";
+month.value=new Date().toISOString().slice(0,7);
 
-const RATES={Day:1550,Evening:1650,Night:2250};
-const $=id=>document.getElementById(id);
-
-let app=null,auth=null,db=null,uid=null;
-let username=localStorage.getItem("cashier_username")||"";
-let records={},selected=[],activeTab=1;
-let month="";
-
-function sriLankaDate(){
- const p=new Intl.DateTimeFormat("en-CA",{
-  timeZone:"Asia/Colombo",year:"numeric",month:"2-digit",day:"2-digit"
- }).formatToParts(new Date());
- const v=t=>p.find(x=>x.type===t).value;
- return `${v("year")}-${v("month")}-${v("day")}`;
+function saveName(){
+ let n=cashier.value.trim();
+ if(!n)return alert("Enter cashier name");
+ localStorage.setItem("cashierName",n);
+ render();
 }
-function updateClock(){
- $("clock").textContent=new Intl.DateTimeFormat("en-US",{
-  timeZone:"Asia/Colombo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true
- }).format(new Date());
- $("liveDate").textContent=new Intl.DateTimeFormat("en-GB",{
-  timeZone:"Asia/Colombo",weekday:"long",day:"2-digit",month:"long",year:"numeric"
- }).format(new Date());
+function key(day){
+ return (localStorage.getItem("cashierName")||"")+
+ "|"+month.value+"|"+day;
 }
-updateClock();
-setInterval(updateClock,1000);
-
-function money(n){return "Rs. "+Number(n||0).toLocaleString("en-US")}
-function isPoya(date){return POYA_DATES.has(date)}
-function poyaMarkup(){
- return `<div class="poyaLetters">
- <span>P</span><span>O</span><span>Y</span><span>A</span>
- <span>D</span><span>A</span><span>Y</span>
- <div class="poyaLabel">🌕 POYA</div></div>`;
+function save(){
+ localStorage.setItem("cashierData",JSON.stringify(data));
 }
-function updateButtons(){
- document.querySelectorAll(".shift").forEach(b=>{
-  b.classList.toggle("active",selected.includes(b.dataset.shift));
- });
-}
-
-/* Always render the full date list, even before Firebase connects */
-function render(){
- if(!month)return;
- const year=Number(month.slice(0,4));
- const monthNumber=Number(month.slice(5,7));
- const daysInMonth=new Date(year,monthNumber,0).getDate();
- let total1=0,total2=0,periodTotal=0,html="";
-
- for(let day=1;day<=daysInMonth;day++){
-  const date=`${month}-${String(day).padStart(2,"0")}`;
-  const item=records[date];
-  const shifts=Array.isArray(item?.shifts)?item.shifts:[];
-  const salary=shifts.reduce((sum,s)=>sum+(RATES[s]||0),0);
-
-  if(day<=15)total1+=salary;
-  else total2+=salary;
-
-  const inPeriod=activeTab===1?day<=15:day>=16;
-  if(!inPeriod)continue;
-  periodTotal+=salary;
-
-  const weekday=new Date(year,monthNumber-1,day)
-   .toLocaleDateString("en-GB",{weekday:"short"});
-  const poya=isPoya(date);
-  const detail=shifts.length
-   ?shifts.map(s=>`${s} (${money(RATES[s])})`).join(" + ")
-   :"OFF / No shift marked";
-
-  const dateDisplay=poya?poyaMarkup():`${day}<br><small>${weekday}</small>`;
-
-  html+=`
-   <div class="day ${poya?"poya":""}">
-    <div class="daydate">${dateDisplay}</div>
-    <div class="dayinfo">
-     <div class="daytop">
-      <div class="dayname">${poya?"🌕 FULL MOON POYA DAY":`${day} ${weekday}`}</div>
-      <div class="salary">${money(salary)}</div>
-     </div>
-     <span class="status ${shifts.length?"worked":"rest"}">
-      ${shifts.length?"✓ WORKED":"⚪ OFF"}
-     </span>
-     <div class="detail">${detail}</div>
-     <button class="editBtn" data-date="${date}">✏️ SELECT DAY</button>
-    </div>
-   </div>`;
- }
-
- $("daysList").innerHTML=html;
- $("total1").textContent=money(total1);
- $("total2").textContent=money(total2);
- $("periodTotal").textContent=money(periodTotal);
-
- document.querySelectorAll(".editBtn").forEach(button=>{
-  button.onclick=()=>{
-   const date=button.dataset.date;
-   $("workDate").value=date;
-   selected=records[date]?[...records[date].shifts]:[];
-   updateButtons();
-   render();
-   window.scrollTo({top:0,behavior:"smooth"});
-  };
- });
-}
-
 function changeTab(n){
- activeTab=n;
- $("tab1").classList.toggle("active",n===1);
- $("tab2").classList.toggle("active",n===2);
- $("listTitle").textContent=n===1?"📅 DAYS 1 – 15":"📅 DAYS 16 – END";
- selected=[];
- updateButtons();
+ tab=n;
+ document.getElementById("tab1").classList.toggle("active",n===1);
+ document.getElementById("tab2").classList.toggle("active",n===2);
  render();
 }
-
-$("tab1").onclick=()=>changeTab(1);
-$("tab2").onclick=()=>changeTab(2);
-
-document.querySelectorAll(".shift").forEach(button=>{
- button.onclick=()=>{
-  const s=button.dataset.shift;
-  selected=selected.includes(s)?selected.filter(x=>x!==s):[...selected,s];
-  updateButtons();
- };
-});
-
-$("month").onchange=()=>{
- month=$("month").value;
- if(!month)return;
- const today=sriLankaDate();
- $("workDate").value=today.startsWith(month)?today:`${month}-01`;
- changeTab(1);
- render();
- loadMonth();
-};
-
-$("workDate").onchange=()=>{
- const date=$("workDate").value;
- if(!date)return;
- if(date.slice(0,7)!==month){
-  month=date.slice(0,7);
-  $("month").value=month;
-  changeTab(Number(date.slice(8,10))<=15?1:2);
-  render();
-  loadMonth();
- }else{
-  selected=records[date]?[...records[date].shifts]:[];
-  updateButtons();
-  render();
+function toggleShift(day,shift){
+ let k=key(day);
+ if(!data[k])data[k]=[];
+ if(data[k].includes(shift))data[k]=data[k].filter(x=>x!==shift);
+ else data[k].push(shift);
+ save();render();
+}
+function isPoya(date){
+ return poya2026.includes(date);
+}
+function render(){
+ let box=document.getElementById("days");
+ box.innerHTML="";
+ if(!month.value)return;
+ let [year,mon]=month.value.split("-").map(Number);
+ let last=new Date(year,mon,0).getDate();
+ let start=tab===1?1:16;
+ let end=tab===1?15:last;
+ let total=0;
+ for(let d=start;d<=end;d++){
+  let date=year+"-"+String(mon).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+  let shifts=data[key(d)]||[];
+  let salary=shifts.reduce((s,x)=>s+rates[x],0);
+  total+=salary;
+  let poya=isPoya(date);
+  let row=document.createElement("div");
+  row.className="dateRow";
+  let left=poya?
+   '<div class="poya"><div class="poyaLetters">P<br>O<br>Y<br>A<br>D<br>A<br>Y</div><div>🌕 POYA DAY</div></div>':
+   '<div class="dateName">'+d+' / '+mon+'</div>';
+  row.innerHTML=`
+   <div class="dateTop">
+    ${left}
+    <div class="salary">Rs. ${salary.toLocaleString("en-US")}</div>
+   </div>
+   <div class="shiftButtons">
+    <button class="daybtn ${shifts.includes("Day")?"selected":""}" onclick="toggleShift(${d},'Day')">🟢 Day</button>
+    <button class="evebtn ${shifts.includes("Evening")?"selected":""}" onclick="toggleShift(${d},'Evening')">🟠 Evening</button>
+    <button class="nightbtn ${shifts.includes("Night")?"selected":""}" onclick="toggleShift(${d},'Night')">🌙 Night</button>
+   </div>
+   <div class="off">${shifts.length?shifts.join(" + "):"OFF"}</div>`;
+  box.appendChild(row);
  }
-};
-
-function showLogin(){
- $("login").style.display="flex";
+ document.getElementById("total").textContent=
+ "TOTAL: Rs. "+total.toLocaleString("en-US");
 }
-function setUser(name){
- username=name.trim();
- localStorage.setItem("cashier_username",username);
- $("userDisplay").textContent="👤 "+username;
- $("login").style.display="none";
+function clearMonth(){
+ if(!confirm("Clear this month's attendance?"))return;
+ let [y,m]=month.value.split("-");
+ Object.keys(data).forEach(k=>{
+  if(k.startsWith((localStorage.getItem("cashierName")||"")+"|"+month.value+"|"))
+   delete data[k];
+ });
+ save();render();
 }
-$("loginBtn").onclick=()=>{
- const name=$("nameInput").value.trim();
- if(!name)return alert("Enter your name");
- if(!uid)return alert("Please wait for Firebase connection");
- setUser(name);
- loadMonth();
-};
-
-async function loadMonth(){
- if(!uid||!username||!month)return;
- $("message").textContent="Loading saved records...";
- try{
-  const snapshot=await getDocs(collection(db,"users",uid,"attendance"));
-  records={};
-  snapshot.forEach(s=>{
-   const data=s.data();
-   if(data.date&&data.date.startsWith(month))records[data.date]=data;
-  });
-  const date=$("workDate").value;
-  selected=records[date]?[...records[date].shifts]:[];
-  updateButtons();
-  $("message").textContent="";
-  render();
- }catch(error){
-  $("message").textContent="Database error: "+error.message;
-  render();
- }
+function clock(){
+ let now=new Date();
+ document.getElementById("clock").textContent=now.toLocaleTimeString();
+ document.getElementById("today").textContent=now.toDateString();
 }
-
-async function saveDay(isOff=false){
- if(!uid||!username)return;
- const date=$("workDate").value;
- if(!date)return alert("Select date");
- if(date.slice(0,7)!==month)return alert("Select correct month");
- if(!isOff&&!selected.length)return alert("Select a shift");
-
- const shifts=isOff?[]:[...selected];
- const salary=shifts.reduce((sum,s)=>sum+(RATES[s]||0),0);
- $("saveBtn").disabled=true;
- $("offBtn").disabled=true;
- $("message").textContent="Saving...";
- try{
-  await setDoc(doc(db,"users",uid,"attendance",date),{
-   date,name:username,shifts,salary,updatedAt:new Date().toISOString()
-  });
-  records[date]={date,name:username,shifts,salary};
-  $("message").textContent="✅ Saved successfully!";
-  render();
- }catch(error){
-  $("message").textContent="Save error: "+error.message;
- }finally{
-  $("saveBtn").disabled=false;
-  $("offBtn").disabled=false;
- }
-}
-$("saveBtn").onclick=()=>saveDay(false);
-$("offBtn").onclick=()=>saveDay(true);
-
-/* Set month and render days immediately */
-const today=sriLankaDate();
-month=today.slice(0,7);
-$("month").value=month;
-$("workDate").value=today;
-$("userDisplay").textContent=username?"👤 "+username:"👤 Cashier";
-render();
-if(!username)showLogin();
-
-/* Firebase connection starts after the day list has rendered */
-async function startFirebase(){
- try{
-  if(firebaseConfig.apiKey==="YOUR_API_KEY"){
-   $("message").textContent="Firebase Config එක ඇතුළත් කළ පසු Save ක්‍රියාත්මක වේ.";
-   return;
-  }
-  app=initializeApp(firebaseConfig);
-  auth=getAuth(app);
-  db=getFirestore(app);
-  await signInAnonymously(auth);
-  onAuthStateChanged(auth,user=>{
-   if(!user)return;
-   uid=user.uid;
-   if(username)loadMonth();
-  });
- }catch(error){
-  $("message").textContent="Firebase connection error: "+error.message;
- }
-}
-startFirebase();
+month.addEventListener("change",render);
+setInterval(clock,1000);clock();render();
 </script>
 </body>
 </html>
