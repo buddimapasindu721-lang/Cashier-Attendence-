@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cashier Shift Attendance</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(135deg,#080810,#171027,#071c16);
+ color:white;
+ min-height:100vh;
+ padding:15px;
+}
+.container{max-width:520px;margin:auto}
+.card{
+ background:rgba(255,255,255,.07);
+ border:1px solid rgba(255,255,255,.12);
+ border-radius:18px;
+ padding:17px;
+ margin-bottom:15px;
+ box-shadow:0 8px 25px #0005;
+}
+.header{text-align:center;padding:20px 10px}
+.logo{font-size:27px;font-weight:bold;color:#a78bfa}
+.clock{
+ font-size:35px;
+ font-weight:bold;
+ margin-top:15px;
+ color:#a3ffcb;
+}
+.date{color:#c8c0dc;margin-top:7px}
+.welcome{color:#a78bfa;font-size:18px;font-weight:bold}
+label{display:block;color:#c9c2d8;margin:12px 0 7px}
+input{
+ width:100%;
+ padding:13px;
+ border-radius:10px;
+ border:1px solid #51456e;
+ background:#171426;
+ color:white;
+ font-size:16px;
+}
+button{
+ border:0;
+ border-radius:11px;
+ padding:13px;
+ font-weight:bold;
+ cursor:pointer;
+ color:white;
+}
+.primary{
+ background:linear-gradient(100deg,#7c3aed,#16a34a);
+ width:100%;
+ margin-top:15px;
+ font-size:16px;
+}
+.shift-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+ margin-top:12px;
+}
+.shift{
+ background:#242039;
+ border:1px solid #55486e;
+ padding:15px 5px;
+}
+.shift.active{
+ background:#176b45;
+ border:2px solid #4ade80;
+}
+.shift small{display:block;font-size:11px;margin-top:6px}
+.section-title{
+ font-size:17px;
+ font-weight:bold;
+ color:#c4b5fd;
+ margin-bottom:12px;
+}
+.total-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+.total-box{
+ background:#171426;
+ border-radius:13px;
+ padding:15px;
+ border:1px solid #42345e;
+}
+.total-box small{color:#aaa}
+.total-box strong{
+ display:block;
+ color:#8bffb8;
+ font-size:20px;
+ margin-top:8px;
+}
+.day-row{
+ background:#171426;
+ border:1px solid #39304e;
+ border-radius:12px;
+ padding:13px;
+ margin-top:10px;
+}
+.day-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+.day-name{font-weight:bold}
+.day-salary{color:#8bffb8;font-weight:bold}
+.day-shifts{color:#bdb3d2;font-size:13px;margin-top:9px}
+.delete{
+ background:#6b2437;
+ padding:7px 10px;
+ font-size:12px;
+ margin-top:10px;
+}
+.muted{color:#aaa;font-size:13px}
+.empty{text-align:center;color:#999;padding:20px}
+.footer{text-align:center;color:#777;font-size:11px;padding:15px}
+.hidden{display:none}
+@media(max-width:360px){
+ .clock{font-size:29px}
+ .shift-grid{gap:5px}
+ .shift{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="card header">
+ <div class="logo">CASHIER ATTENDANCE</div>
+ <div class="clock" id="clock">00:00:00</div>
+ <div class="date" id="liveDate"></div>
+ <p class="welcome" id="welcome">Welcome</p>
+</div>
+
+<div class="card">
+ <div class="section-title">SELECT MONTH & YEAR</div>
+ <label>Attendance Month</label>
+ <input type="month" id="monthPicker">
+</div>
+
+<div class="card">
+ <div class="section-title">MARK YOUR SHIFT</div>
+
+ <label>Select Date</label>
+ <input type="date" id="workDate">
+
+ <label>Select Shifts (Multiple allowed)</label>
+
+ <div class="shift-grid">
+  <button class="shift" data-shift="Day">
+   ☀️ DAY
+   <small>Rs. 1,550</small>
+  </button>
+
+  <button class="shift" data-shift="Evening">
+   🌇 EVENING
+   <small>Rs. 1,650</small>
+  </button>
+
+  <button class="shift" data-shift="Night">
+   🌙 NIGHT
+   <small>Rs. 2,250</small>
+  </button>
+ </div>
+
+ <button class="primary" id="saveBtn">SAVE SHIFT</button>
+ <p class="muted" id="message"></p>
+</div>
+
+<div class="card">
+ <div class="section-title">SALARY TOTALS</div>
+ <div class="total-grid">
+  <div class="total-box">
+   <small>1 – 15 TOTAL</small>
+   <strong id="firstTotal">Rs. 0</strong>
+  </div>
+  <div class="total-box">
+   <small>16 – END TOTAL</small>
+   <strong id="secondTotal">Rs. 0</strong>
+  </div>
+ </div>
+</div>
+
+<div class="card">
+ <div class="section-title">DAILY ATTENDANCE & SALARY</div>
+ <div id="records"></div>
+</div>
+
+<div class="footer">
+ CASHIER SHIFT ATTENDANCE SYSTEM
+</div>
+</div>
+
+<!-- USER NAME SCREEN -->
+<div id="loginScreen" style="
+ position:fixed;inset:0;background:#090811;
+ display:none;align-items:center;justify-content:center;
+ padding:22px;z-index:10">
+ <div class="card" style="width:100%;max-width:400px">
+  <h2 style="color:#a78bfa;text-align:center">
+   CASHIER ATTENDANCE
+  </h2>
+  <p style="text-align:center;color:#bbb">
+   Enter your name to continue
+  </p>
+  <label>Your Name</label>
+  <input id="nameInput" placeholder="Enter your name">
+  <button class="primary" id="loginBtn">CONTINUE</button>
+ </div>
+</div>
+
+<script>
+const RATES={
+ Day:1550,
+ Evening:1650,
+ Night:2250
+};
+
+const $=id=>document.getElementById(id);
+
+let username=localStorage.getItem("cashier_username");
+let selectedShifts=[];
+let records={};
+
+function storageKey(){
+ return "cashier_records_"+username.toLowerCase().trim();
+}
+
+function loadRecords(){
+ try{
+  records=JSON.parse(localStorage.getItem(storageKey())||"{}");
+ }catch(e){
+  records={};
+ }
+}
+
+function saveRecords(){
+ localStorage.setItem(storageKey(),JSON.stringify(records));
+}
+
+function showLogin(){
+ $("loginScreen").style.display="flex";
+}
+
+function startApp(name){
+ username=name.trim();
+ localStorage.setItem("cashier_username",username);
+ loadRecords();
+ $("loginScreen").style.display="none";
+ $("welcome").textContent="Welcome, "+username;
+ render();
+}
+
+if(!username){
+ showLogin();
+}else{
+ loadRecords();
+ $("welcome").textContent="Welcome, "+username;
+}
+
+$("loginBtn").onclick=()=>{
+ const name=$("nameInput").value.trim();
+ if(!name){
+  alert("Please enter your name");
+  return;
+ }
+ startApp(name);
+};
+
+function sriLankaDate(){
+ return new Intl.DateTimeFormat("en-CA",{
+  timeZone:"Asia/Colombo",
+  year:"numeric",month:"2-digit",day:"2-digit"
+ }).format(new Date());
+}
+
+function updateClock(){
+ const now=new Date();
+ $("clock").textContent=
+ new Intl.DateTimeFormat("en-US",{
+  timeZone:"Asia/Colombo",
+  hour:"2-digit",minute:"2-digit",second:"2-digit",
+  hour12:true
+ }).format(now);
+
+ $("liveDate").textContent=
+ new Intl.DateTimeFormat("en-GB",{
+  timeZone:"Asia/Colombo",
+  weekday:"long",day:"2-digit",
+  month:"long",year:"numeric"
+ }).format(now);
+}
+updateClock();
+setInterval(updateClock,1000);
+
+const today=sriLankaDate();
+$("monthPicker").value=today.slice(0,7);
+$("workDate").value=today;
+
+$("monthPicker").addEventListener("change",()=>{
+ if(!$("monthPicker").value)return;
+ const month=$("monthPicker").value;
+ $("workDate").value=month+"-01";
+ selectedShifts=[];
+ updateButtons();
+ render();
+});
+
+$("workDate").addEventListener("change",()=>{
+ const date=$("workDate").value;
+ if(!date)return;
+ $("monthPicker").value=date.slice(0,7);
+ selectedShifts=records[date]?
+ [...records[date].shifts]:[];
+ updateButtons();
+ render();
+});
+
+document.querySelectorAll(".shift").forEach(btn=>{
+ btn.onclick=()=>{
+  const shift=btn.dataset.shift;
+  if(selectedShifts.includes(shift)){
+   selectedShifts=selectedShifts.filter(x=>x!==shift);
+  }else{
+   selectedShifts.push(shift);
+  }
+  updateButtons();
+ };
+});
+
+function updateButtons(){
+ document.querySelectorAll(".shift").forEach(btn=>{
+  btn.classList.toggle(
+   "active",
+   selectedShifts.includes(btn.dataset.shift)
+  );
+ });
+}
+
+function calculate(shifts){
+ return shifts.reduce((sum,shift)=>{
+  return sum+(RATES[shift]||0);
+ },0);
+}
+
+$("saveBtn").onclick=()=>{
+ if(!username)return;
+
+ const date=$("workDate").value;
+ if(!date){
+  alert("Select a date");
+  return;
+ }
+
+ if(!selectedShifts.length){
+  alert("Select at least one shift");
+  return;
+ }
+
+ records[date]={
+  shifts:[...selectedShifts],
+  updatedAt:new Date().toISOString()
+ };
+
+ saveRecords();
+ $("message").textContent="Saved successfully!";
+ render();
+};
+
+function money(value){
+ return "Rs. "+value.toLocaleString("en-US");
+}
+
+function render(){
+ if(!username)return;
+
+ const month=$("monthPicker").value;
+ if(!month)return;
+
+ const dates=Object.keys(records)
+  .filter(date=>date.startsWith(month))
+  .sort();
+
+ let firstTotal=0;
+ let secondTotal=0;
+ let html="";
+
+ dates.forEach(date=>{
+  const item=records[date];
+  const total=calculate(item.shifts);
+
+  if(Number(date.slice(8,10))<=15){
+   firstTotal+=total;
+  }else{
+   secondTotal+=total;
+  }
+
+  const formatted=new Date(date+"T12:00:00")
+   .toLocaleDateString("en-GB",{
+    weekday:"short",day:"2-digit",month:"short"
+   });
+
+  html+=`
+   <div class="day-row">
+    <div class="day-head">
+     <span class="day-name">${formatted}</span>
+     <span class="day-salary">${money(total)}</span>
+    </div>
+    <div class="day-shifts">
+     ${item.shifts.join(" + ")}
+    </div>
+    <button class="delete" onclick="deleteRecord('${date}')">
+     DELETE
+    </button>
+   </div>
+  `;
+ });
+
+ $("firstTotal").textContent=money(firstTotal);
+ $("secondTotal").textContent=money(secondTotal);
+
+ $("records").innerHTML=html||
+ '<div class="empty">No attendance records for this month</div>';
+
+ const selectedDate=$("workDate").value;
+ selectedShifts=records[selectedDate]?
+ [...records[selectedDate].shifts]:[];
+ updateButtons();
+}
+
+function deleteRecord(date){
+ if(!confirm("Delete this attendance record?"))return;
+
+ delete records[date];
+ saveRecords();
+
+ if($("workDate").value===date){
+  selectedShifts=[];
+  updateButtons();
+ }
+ render();
+}
+
+if(username){
+ render();
+}
+</script>
+</body>
+</html>
